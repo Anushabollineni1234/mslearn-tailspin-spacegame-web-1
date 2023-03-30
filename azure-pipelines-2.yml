@@ -6,23 +6,19 @@
 parameters:
 - name: image
   displayName: Pool Image
+  type: string
+  default: ubuntu-latest
   values:
   - windows-latest
   - ubuntu-latest
   - macOS-latest
-- name: test
-  displayName: Run Tests?
-  type: boolean
-  default: false
 
 trigger: none
 
 jobs:
 - job: build
-  displayName: Build and Test
+  displayName: build
   pool: 
     vmImage: ${{ parameters.image }}
   steps:
-  - script: echo building $(Build.BuildNumber)
-  - ${{ if eq(parameters.test, true) }}:
-    - script: echo "Running all the tests"
+  - script: echo building $(Build.BuildNumber) with ${{ parameters.image }}
