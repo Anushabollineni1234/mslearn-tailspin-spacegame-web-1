@@ -3,15 +3,26 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-trigger:
-- main
+parameters:
+- name: image
+  displayName: Pool Image
+  values:
+  - windows-latest
+  - ubuntu-latest
+  - macOS-latest
+- name: test
+  displayName: Run Tests?
+  type: boolean
+  default: false
 
-pool:
-  vmImage: ubuntu-latest
+trigger: none
 
-variables:
-  buildConfiguration: 'Release'
-
-steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+jobs:
+- job: build
+  displayName: Build and Test
+  pool: 
+    vmImage: ${{ parameters.image }}
+  steps:
+  - script: echo building $(Build.BuildNumber)
+  - ${{ if eq(parameters.test, true) }}:
+    - script: echo "Running all the tests"
